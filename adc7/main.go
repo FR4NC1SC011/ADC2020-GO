@@ -55,6 +55,8 @@ func solve_A(input string) {
 		bags[bag] = b
 	}
 
+	fmt.Println(bags)
+
 }
 
 func check(e error) {
