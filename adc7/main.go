@@ -4,59 +4,57 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
-
-	valid "github.com/asaskevich/govalidator"
 )
-
-type Bag struct {
-	Name     string
-	Quantity int
-}
 
 func main() {
 	solve_A("example.txt")
 }
 
 func solve_A(input string) {
-	var bag string
-	var quantity int
+	rules := make(map[string][]string)
+	valids := make(map[string]bool)
+	valids["shiny gold"] = true
 
-	bags := make(map[string]Bag)
-	var b Bag
-
-	file, err := os.Open("example.txt")
+	file, err := os.Open(input)
 	check(err)
 	defer file.Close()
 
 	sc := bufio.NewScanner(file)
-	sc.Split(bufio.ScanWords)
+
 	for sc.Scan() {
-		if sc.Text() == "contain" {
-			fmt.Println(bag)
-			bag = ""
-		} else if strings.HasSuffix(sc.Text(), ",") || strings.HasSuffix(sc.Text(), ".") {
-			fmt.Println("  ", bag, quantity)
-			b = Bag{
-				Name:     bag,
-				Quantity: quantity,
-			}
-			bag = ""
-		} else if valid.IsInt(sc.Text()) {
-			quantity, err = strconv.Atoi(sc.Text())
-			check(err)
-		} else if sc.Text() == "no" || sc.Text() == "other" {
-			quantity = 0
-			fmt.Println("    No")
-		} else {
-			bag += sc.Text() + " "
+		parsedInput := strings.ReplaceAll(sc.Text(), " bags", "")
+		parsedInput = strings.ReplaceAll(parsedInput, " bag", "")
+		parsedInput = strings.ReplaceAll(parsedInput, ".", "")
+		rule := strings.Split(parsedInput, " contain ")
+
+		for _, bag := range strings.Split(rule[1], ", ") {
+			rules[rule[0]] = append(rules[rule[0]], bag[2:])
 		}
-		bags[bag] = b
 	}
 
-	fmt.Println(bags)
+	for bag := range rules {
+		if lookIn(bag, rules, valids) {
+			valids[bag] = true
+		}
+	}
 
+	fmt.Println(len(valids) - 1)
+
+}
+
+func lookIn(lookedBag string, rules map[string][]string, valids map[string]bool) bool {
+	if valids[lookedBag] {
+		return true
+	}
+
+	for _, bag := range rules[lookedBag] {
+		if lookIn(bag, rules, valids) {
+			valids[bag] = true
+			return true
+		}
+	}
+	return false
 }
 
 func check(e error) {
