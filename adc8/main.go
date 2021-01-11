@@ -16,7 +16,7 @@ type Instruction struct {
 }
 
 func main() {
-	solve_A("input.txt")
+	Solve_B("example.txt")
 }
 
 func solve_A(I string) {
@@ -99,7 +99,7 @@ func solve_A(I string) {
 
 func readFile(input string) []string {
 	content, err := ioutil.ReadFile(input)
-	check(err)
+	Check(err)
 
 	text := string(content)
 	s := strings.Split(text, "\n")
@@ -107,7 +107,7 @@ func readFile(input string) []string {
 	return s
 }
 
-func check(e error) {
+func Check(e error) {
 	if e != nil {
 		log.Fatal(e)
 	}
