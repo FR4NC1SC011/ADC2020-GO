@@ -9,14 +9,14 @@ import (
 )
 
 type Instruction struct {
-	name   string
-	sign   string
-	value  int
-	repeat bool
+	name  string
+	sign  string
+	value int
+	first bool
 }
 
 func main() {
-	solve_A("example.txt")
+	solve_A("input.txt")
 }
 
 func solve_A(I string) {
@@ -41,48 +41,60 @@ func solve_A(I string) {
 		str_value = instructions[i]
 		str_value = str_value[5:]
 		value, _ = strconv.Atoi(str_value)
-		Instructions = append(Instructions, Instruction{instruction, sign, value, false})
+		Instructions = append(Instructions, Instruction{instruction, sign, value, true})
 		//fmt.Printf("%s -> %s:%d\n", instruction, sign, value)
 		i++
 		x++
 	}
 
 	j := 0
-	z := 0
-	for z < len(instructions)-1 {
+	//z := 0
+
+	b := true
+	for true {
 
 		instr := Instructions[j].name
 		sgn := Instructions[j].sign
 		val := Instructions[j].value
-		rep := Instructions[j].repeat
 
-		if !rep {
-			fmt.Println("Entramos")
+		//fmt.Printf("%s %s%d  | %d\n", instr, sgn, val, z+1)
+
+		if Instructions[j].first {
 			if sgn == "+" {
-				if instr == "jmp" {
-					j += val
-				} else if instr == "acc" {
-					counter += val
-				} else if instr == "nop" {
+				if instr == "nop" {
+					Instructions[j].first = false
 					j++
+				} else if instr == "acc" {
+					Instructions[j].first = false
+					counter += val
+					j++
+				} else if instr == "jmp" {
+					Instructions[j].first = false
+					j += val
 				}
 			} else if sgn == "-" {
-				if instr == "jmp" {
-					j -= val
+				if instr == "nop" {
+					Instructions[j].first = false
+					j++
 				} else if instr == "acc" {
 					counter -= val
-				} else if instr == "nop" {
+					Instructions[j].first = false
 					j++
+				} else if instr == "jmp" {
+					Instructions[j].first = false
+					j -= val
 				}
 			}
-			fmt.Printf("%s -> %s:%d\n", Instructions[j].name, Instructions[j].sign, Instructions[j].value)
-			Instructions[j].repeat = true
-		} else if rep {
-			fmt.Println(counter)
-			return
+		} else if !Instructions[j].first {
+			b = false
+			break
 		}
-		z++
+
+		_ = b
+
+		//z++
 	}
+	fmt.Println("Counter:", counter)
 }
 
 func readFile(input string) []string {
