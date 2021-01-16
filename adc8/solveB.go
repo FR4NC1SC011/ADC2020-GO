@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -30,7 +29,12 @@ func Solve_B(input string) {
 	}
 
 	for pCounter := range loop {
-		fmt.Println(pCounter)
+		if loop[pCounter].name == "acc" {
+			continue
+		}
+
+		copyLoop := make([]instruction, len(loop))
+		copy(copyLoop, loop)
 	}
 
 }
