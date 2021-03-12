@@ -16,7 +16,7 @@ type Instruction struct {
 }
 
 func main() {
-	Solve_B("example.txt")
+	solve_A("input.txt")
 }
 
 func solve_A(I string) {
