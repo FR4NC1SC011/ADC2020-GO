@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -35,6 +36,13 @@ func Solve_B(input string) {
 
 		copyLoop := make([]instruction, len(loop))
 		copy(copyLoop, loop)
+	}
+
+}
+
+func Check(e error) {
+	if e != nil {
+		log.Println("Error")
 	}
 
 }
